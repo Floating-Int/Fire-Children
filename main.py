@@ -19,8 +19,8 @@ class App(Engine):
         self.player1 = PlayerA(x=3, y=4, label_position=Vec2(3, 1))
         self.player2 = PlayerB(skin=color.MEDIUM_PURPLE, x=54, y=4, label_position=Vec2(54, 1))
         self.players = [self.player1, self.player2]
-        self.audio_stream_player = AudioStreamPlayer("./audio/song.wav")
-        self.audio_stream_player.play()
+        # self.audio_stream_player = AudioStreamPlayer("./audio/song.wav")
+        # self.audio_stream_player.play()
         # self.player3 = PlayerC(x=15, y=self.screen.height-4, label_position=Vec2(self.screen.width // 2 -3, 1))
         # self.players = [self.player1, self.player2, self.player3]
         # self.player2.position.x = 23
