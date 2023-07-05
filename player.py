@@ -249,7 +249,8 @@ class PlayerTemplate(TextCollider, Sprite):
                 self.frame = 0
                 self.shield.deactivate()
             elif self.frame == 3 and not self.shield.animation.is_playing:
-                self.shield.activate()
+                if self.shield.health > 0:
+                    self.shield.activate()
                 if self.direction == RIGHT:
                     self.shield.set_global_position(self.get_global_position() + Vec2(9, 0))
                 elif self.direction == LEFT:

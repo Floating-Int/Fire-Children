@@ -15,9 +15,9 @@ class App(Engine):
         Camera.current.mode = Camera.CENTERED
         Camera.current.set_global_position(Vec2(32, 4))
         # -- nodes
-        self.ground = Ground(y=7)
-        self.player1 = PlayerA(x=3, y=4, label_position=Vec2(3, 1))
-        self.player2 = PlayerB(skin=color.MEDIUM_PURPLE, x=54, y=4, label_position=Vec2(54, 1))
+        self.ground = Ground(y=6)
+        self.player1 = PlayerA(x=3, y=3, label_position=Vec2(3, 0))
+        self.player2 = PlayerB(skin=color.MEDIUM_PURPLE, x=55, y=3, label_position=Vec2(55, 0))
         self.players = [self.player1, self.player2]
         # self.audio_stream_player = AudioStreamPlayer("./audio/song.wav")
         # self.audio_stream_player.play()
@@ -25,7 +25,7 @@ class App(Engine):
         # self.players = [self.player1, self.player2, self.player3]
         # self.player2.position.x = 23
 
-    def _update(self, _delta: float) -> None:
+    def _update(self, delta: float) -> None:
         if keyboard.is_pressed("q"):
             self.is_running = False
         # if keyboard.is_pressed("e"):
@@ -39,6 +39,11 @@ class App(Engine):
                 if shield.get_global_position() <= particle.get_global_position() < shield.get_global_position() + Vec2(1, 4):
                     particle.queue_free()
                     broke = True
+                    if shield.health > 0:
+                        shield.elapsed_time = 0
+                        shield.health -= 1
+                        if shield.health == 0:
+                            shield.deactivate()
                     break
             if broke:
                 continue
@@ -49,6 +54,11 @@ class App(Engine):
                         player.queue_free()
                         self.players.remove(player)
                     particle.queue_free()
+        for shield in Shield.shields:
+            shield.elapsed_time += delta
+            if shield.elapsed_time >= shield.regen_delay:
+                if shield.health < 15:
+                    shield.health += 1
 
 
 if __name__ == "__main__":
