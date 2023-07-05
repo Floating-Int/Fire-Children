@@ -1,8 +1,10 @@
+from __future__ import annotations
 import random
 import math
 from displaylib import *
 
 
+@pull("direction", "speed_modifier")
 class FireParticle(Sprite):
     FORWARD = 1
     BACKFORWARD = -1
@@ -17,10 +19,7 @@ class FireParticle(Sprite):
     _COLORS = [
         color.rgb_color(200+idx*2, 90+idx*8) for idx in range(20)
     ]
-    particles = []
-
-    def __new__(cls, *args, direction: int = FORWARD, speed_modifier: float = 1.0, **kwargs):
-        return super().__new__(cls, *args, **kwargs)
+    particles: list[FireParticle] = []
 
     def __init__(self, parent: Node | None = None, x: int = 0, y: int = 0, force_sort: bool = True, direction: int = FORWARD, speed_modifier: float = 1.0) -> None:
         super().__init__(parent, x=x, y=y, force_sort=force_sort)
