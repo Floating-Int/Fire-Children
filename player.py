@@ -256,6 +256,10 @@ class PlayerTemplate(TextCollider, Sprite):
                 elif self.direction == LEFT:
                     self.shield.set_global_position(self.get_global_position() + Vec2(-2, 0))
 
+    def queue_free(self) -> None:
+        self.shield.deactivate()
+        super().queue_free()
+
 
 class PlayerA(PlayerTemplate):
     def is_moving_left(self) -> bool:
