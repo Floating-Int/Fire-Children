@@ -1,6 +1,6 @@
-from displaylib import *
+from displaylib import * # type: ignore
 import keyboard
-from player import PlayerA, PlayerB, PlayerC
+from player import PlayerTemplate, PlayerA, PlayerB
 from ground import Ground
 from fire import FireParticle
 from shield import Shield
@@ -16,20 +16,13 @@ class App(Engine):
         Camera.current.set_global_position(Vec2(32, 4))
         # -- nodes
         self.ground = Ground(y=6)
-        self.player1 = PlayerA(x=3, y=3, label_position=Vec2(3, 0))
-        self.player2 = PlayerB(skin=color.MEDIUM_PURPLE, x=55, y=3, label_position=Vec2(55, 0))
-        self.players = [self.player1, self.player2]
-        # self.audio_stream_player = AudioStreamPlayer("./audio/song.wav")
-        # self.audio_stream_player.play()
-        # self.player3 = PlayerC(x=15, y=self.screen.height-4, label_position=Vec2(self.screen.width // 2 -3, 1))
-        # self.players = [self.player1, self.player2, self.player3]
-        # self.player2.position.x = 23
+        self.player1 = PlayerA(x=3, y=3, label_position=Vec2(3, 0), device_index=0).as_unique()
+        self.player2 = PlayerB(x=55, y=3, label_position=Vec2(55, 0), device_index=1).as_unique()
+        self.players: list[PlayerTemplate] = [self.player1, self.player2]
 
     def _update(self, delta: float) -> None:
         if keyboard.is_pressed("q"):
             self.is_running = False
-        # if keyboard.is_pressed("e"):
-        #     print(Node.nodes)
         
         for particle in FireParticle.particles:
             broke = False

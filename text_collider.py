@@ -1,18 +1,19 @@
 from __future__ import annotations
 
-from typing import TypeVar
+from typing import cast
 
 from displaylib.math import Vec2
-
-Self = TypeVar("Self")
+from displaylib.template.type_hints import MroNext, NodeType
 
 
 class TextCollider: # Component (mixin class)
-    _colliders = []
-    def __new__(cls: type[Self], *args, **kwargs) -> Self:
-        instance = super().__new__(cls, *args, **kwargs)
+    _colliders: list[TextCollider] = []
+    
+    def __new__(cls: type[NodeType], *args, **kwargs) -> NodeType:
+        mro_next = cast(MroNext[TextCollider], super())
+        instance = mro_next.__new__(cls, *args, **kwargs)
         TextCollider._colliders.append(instance)
-        return instance
+        return cast(NodeType, instance)
 
     def move_and_collide(self, distance: Vec2) -> None:
         old_position = self.position.copy()

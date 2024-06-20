@@ -1,10 +1,10 @@
-from displaylib import *
+from displaylib import * # type: ignore
 
 
 class Ground(Sprite):
-    def __init__(self, parent: Node | None = None, x: int = 0, y: int = 0, z_index: int = 0, force_sort: bool = True) -> None:
-        super().__init__(parent, x=x, y=y, force_sort=force_sort)
+    color = color.SEA_GREEN
+    
+    def __init__(self, parent: AnyNode | None = None, x: float = 0, y: float = 0, z_index: int = 0, force_sort: bool = True) -> None:
         self.texture = [
             list("¨" * 64)
         ]
-        self.color = color.SEA_GREEN

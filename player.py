@@ -1,10 +1,10 @@
 import enum
 import random
-from displaylib import *
+from displaylib import * # type: ignore
 import keyboard
 from shield import Shield
 from fire import FireParticle
-from text_collider import TextCollider
+from controller_support import CustomControllerSupport
 
 
 RIGHT = 1
@@ -17,21 +17,17 @@ class State(enum.IntEnum):
     ATTACKING = 4
 
 
-class PlayerTemplate(TextCollider, Sprite):
+class PlayerTemplate(CustomControllerSupport, Sprite):
     frame: int = 0
     state: State = State.IDLE
+    color = color.STEEL_BLUE
+    texture = [
+        [*"   O   "],
+        [*" / | \\ "],
+        [*"  / \\  "]
+    ]
 
-    def __new__(cls, *args, label_position=None, skin=None, **kwargs):
-        return super().__new__(cls, *args, **kwargs)
-
-    def __init__(self, parent: Node | None = None, x: int = 0, y: int = 0, label_position: Vec2 = Vec2(0, 0), skin=color.STEEL_BLUE) -> None:
-        super().__init__(parent, x=x, y=y)
-        self.texture = [
-            [*"   O   "],
-            [*" / | \\ "],
-            [*"  / \\  "]
-        ]
-        self.color = skin
+    def __init__(self, parent: AnyNode | None = None, x: float = 0, y: float = 0, label_position: Vec2 = Vec2(0, 0), device_index: int | None = None) -> None:
         self._health = 10
         self._fuel = 20
         self._fuel_cooldown = 1.7 # seconds
@@ -82,7 +78,7 @@ class PlayerTemplate(TextCollider, Sprite):
     def is_shielding(self) -> bool:
         return False
 
-    def _update(self, delta: float) -> bool:
+    def _update(self, delta: float) -> None:
         if self.state == State.IDLE:
             walked = False
             velocity = Vec2()
@@ -99,7 +95,8 @@ class PlayerTemplate(TextCollider, Sprite):
                     self.is_flipped = False
                     self.state = State.WALKING
                     walked = True
-                self.move_and_slide(velocity)
+                # self.move_and_slide(velocity)
+                self.position += velocity
             # regen fuel
             self._fuel_elapsed_time += delta
             if self.fuel < 20 and self._fuel_elapsed_time >= self._fuel_cooldown:
@@ -276,6 +273,8 @@ class PlayerA(PlayerTemplate):
 
 
 class PlayerB(PlayerTemplate):
+    color = color.MEDIUM_PURPLE
+
     def is_moving_left(self) -> bool:
         return keyboard.is_pressed(75) # arrow left
     
@@ -290,6 +289,8 @@ class PlayerB(PlayerTemplate):
 
 
 class PlayerC(PlayerTemplate):
+    color = color.CORAL
+
     def is_moving_left(self) -> bool:
         return keyboard.is_pressed("g")
     
